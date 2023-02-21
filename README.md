@@ -17,6 +17,7 @@
 						<li>Controller and services for grocery lists(Post/Put/Get/Delete) – 2 days</li>
 						<li>Controller and services for users(Post/Put/Get) – 2 days</li>
 						<li>Connect to MySQL database – 2 days</li>
+					</ol>
 				</li>
 				<li>
 					Add functionality for email sender – 1 week
