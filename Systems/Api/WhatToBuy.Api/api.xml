@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WhatToBuy.Api</name>
+    </assembly>
+    <members>
+        <member name="T:DSRNetSchool.Api.Configuration.AutoMapperConfiguration">
+            <summary>
+            AutoMapper configuration
+            </summary>
+        </member>
+        <member name="M:DSRNetSchool.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add automappers
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
+        <member name="T:WhatToBuy.Api.Configuration.CorsConfiguration">
+            <summary>
+            CORS configuration
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.CorsConfiguration.AddAppCors(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add CORS
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.CorsConfiguration.UseAppCors(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Use service
+            </summary>
+            <param name="app">Application</param>
+        </member>
+        <member name="T:WhatToBuy.Api.Configuration.LoggerConfiguration">
+            <summary>
+            Logger Configuration
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.LoggerConfiguration.AddAppLogger(Microsoft.AspNetCore.Builder.WebApplicationBuilder)">
+            <summary>
+            Add logger
+            </summary>
+        </member>
+        <member name="T:WhatToBuy.Api.Configuration.SwaggerConfiguration">
+            <summary>
+            Swagger configuration
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add OpenAPI for API
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+            Start OpenAPI UI
+            </summary>
+            <param name="app">Web application</param>
+        </member>
+        <member name="T:WhatToBuy.Api.Configuration.VersioningConfiguration">
+            <summary>
+            Versioning configuration
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.VersioningConfiguration.AddAppVersioning(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add version support for API
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
+        <member name="T:WhatToBuy.Api.Controllers.Item.ItemController">
+            <summary>
+            Item Controller
+            </summary>
+        </member>
+    </members>
+</doc>
