@@ -22,7 +22,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Data\WhatToBuy.Context\WhatToBuy.Context.csproj" />
+<<<<<<< HEAD
     <ProjectReference Include="..\..\..\Shared\WhatToBuy.Common\WhatToBuy.Common.csproj" />
+=======
+>>>>>>> d95d788339de7010bc01e073e3b6e0891936c0e9
   </ItemGroup>
 
 </Project>
