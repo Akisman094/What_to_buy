@@ -4,6 +4,17 @@
         <name>WhatToBuy.Api</name>
     </assembly>
     <members>
+        <member name="T:DSRNetSchool.Api.Configuration.AutoMapperConfiguration">
+            <summary>
+            AutoMapper configuration
+            </summary>
+        </member>
+        <member name="M:DSRNetSchool.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add automappers
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
         <member name="T:WhatToBuy.Api.Configuration.CorsConfiguration">
             <summary>
             CORS configuration
@@ -58,6 +69,11 @@
             Add version support for API
             </summary>
             <param name="services">Services collection</param>
+        </member>
+        <member name="T:WhatToBuy.Api.Controllers.Item.ItemController">
+            <summary>
+            Item Controller
+            </summary>
         </member>
     </members>
 </doc>
