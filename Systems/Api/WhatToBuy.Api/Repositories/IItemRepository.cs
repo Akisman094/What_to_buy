@@ -1,0 +1,11 @@
+﻿using WhatToBuy.Context.Entities;
+
+namespace WhatToBuy.Api.Repositories;
+public interface IItemRepository
+{
+    Task AddAsync(Item item);
+    Task DeleteAsync(Item item);
+    Task<IEnumerable<Item>> GetAllAsync();
+    Task<Item> GetByIdAsync(int id);
+    Task UpdateAsync(Item item);
+}

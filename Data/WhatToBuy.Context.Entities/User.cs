@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace WhatToBuy.Context.Entities;
 
-namespace WhatToBuy.Context.Entities
+using Microsoft.AspNetCore.Identity;
+
+public class User : IdentityUser<Guid>
 {
-    public class User : BaseEntity
-    {
-        public string name { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
+    public string name { get; set; }
+    public string email { get; set; }
 
-        public int? FamilyId { get; set; }
-        public virtual Family Family { get; set; }
-    }
+    public int? FamilyId { get; set; }
+    public virtual Family Family { get; set; }
 }

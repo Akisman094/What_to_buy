@@ -1,9 +1,9 @@
 ﻿namespace WhatToBuy.Context;
 
-using WhatToBuy.Settings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
+using WhatToBuy.Settings;
 
 public static class Bootstrapper
 {
