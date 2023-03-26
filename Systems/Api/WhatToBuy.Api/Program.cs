@@ -1,3 +1,4 @@
+using WhatToBuy.Api;
 using WhatToBuy.Api.Configuration;
 using WhatToBuy.Context;
 
@@ -16,12 +17,15 @@ services.AddAppVersioning();
 
 services.AddAppDbContext();
 
+services.RegisterAppServices();
+
 var app = builder.Build();
 
 app.UseAppSwagger();
 
 app.UseAppCors();
 app.UseAuthorization();
+app.UseAppMiddlewares();
 
 app.MapControllers();
 

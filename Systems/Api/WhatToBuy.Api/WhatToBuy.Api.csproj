@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
@@ -21,11 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Data\WhatToBuy.Context.Entities\WhatToBuy.Context.Entities.csproj" />
     <ProjectReference Include="..\..\..\Data\WhatToBuy.Context\WhatToBuy.Context.csproj" />
-<<<<<<< HEAD
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Families\WhatToBuy.Services.Families.csproj" />
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Items\WhatToBuy.Services.Items.csproj" />
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.ShoppingList\WhatToBuy.Services.ShoppingLists.csproj" />
     <ProjectReference Include="..\..\..\Shared\WhatToBuy.Common\WhatToBuy.Common.csproj" />
-=======
->>>>>>> d95d788339de7010bc01e073e3b6e0891936c0e9
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

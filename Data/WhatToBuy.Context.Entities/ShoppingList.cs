@@ -5,6 +5,8 @@ public class ShoppingList : BaseEntity
     /// <summary>
     /// Shopping List
     /// </summary>
+    public string Name { get; set; }
+    
     public virtual ICollection<Item> Items { get; set; }
 
     public int? FamilyId { get; set; }
