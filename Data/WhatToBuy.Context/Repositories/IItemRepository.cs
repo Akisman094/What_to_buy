@@ -1,6 +1,6 @@
 ﻿using WhatToBuy.Context.Entities;
 
-namespace WhatToBuy.Api.Repositories;
+namespace WhatToBuy.Context.Repositories;
 public interface IItemRepository
 {
     Task AddAsync(Item item);

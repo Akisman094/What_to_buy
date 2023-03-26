@@ -5,8 +5,8 @@
 /// </summary>
 public class Item : BaseEntity
 {
-    public String name { get; set; }
-    public int amount { get; set; }
+    public String Name { get; set; }
+    public int Amount { get; set; }
 
     public int? ShoppingListId { get; set; }
     public virtual ShoppingList ShoppingList { get; set; }

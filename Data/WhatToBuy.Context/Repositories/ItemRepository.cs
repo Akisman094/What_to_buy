@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WhatToBuy.Context.Entities;
 
-namespace WhatToBuy.Api.Repositories;
+namespace WhatToBuy.Context.Repositories;
 
 public class ItemRepository : IItemRepository
 {

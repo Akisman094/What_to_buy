@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WhatToBuy.Context.Entities;
 
-
 /// <summary>
 /// Base entity
 /// </summary>
