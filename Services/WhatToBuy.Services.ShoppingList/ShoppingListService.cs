@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WhatToBuy.Common.Exceptions;
+using WhatToBuy.Context.Entities;
 using WhatToBuy.Context.Repositories;
 
 namespace WhatToBuy.Services.ShoppingLists;
@@ -30,10 +31,11 @@ public class ShoppingListService : IShoppingListService
         return _mapper.Map<ShoppingListModel>(shoppingList);
     }
 
-    public async Task<ShoppingListModel> CreateAsync(AddShoppingListModel shoppingList)
+    public async Task<ShoppingListModel> CreateAsync(AddShoppingListModel shoppingListModel)
     {
-        ProcessException.ThrowIf(() => shoppingList is null, "Shopping list cannot be null.");
-        await _shoppingListRepository.CreateAsync(shoppingList);
+        ProcessException.ThrowIf(() => shoppingListModel is null, "Shopping list cannot be null.");
+        var shoppingList = _mapper.Map<ShoppingList>(shoppingListModel);
+        await _shoppingListRepository.AddAsync(shoppingList);
 
         return _mapper.Map<ShoppingListModel>(shoppingList);
     }
@@ -45,7 +47,9 @@ public class ShoppingListService : IShoppingListService
 
         shoppingList = _mapper.Map(updatedModel, shoppingList);
         await _shoppingListRepository.UpdateAsync(shoppingList);
-        return shoppingList;
+
+        var responseModel = _mapper.Map<ShoppingListModel>(updatedModel);
+        return responseModel;
     }
 
     public async Task DeleteAsync(int id)

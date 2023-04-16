@@ -5,7 +5,7 @@
 /// </summary>
 public class Family : BaseEntity
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = "New Family";
     public virtual ICollection<User> Users { get; set; }
     public virtual ICollection<ShoppingList> ShoppingLists { get; set; }
 }

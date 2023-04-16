@@ -4,17 +4,6 @@
         <name>WhatToBuy.Api</name>
     </assembly>
     <members>
-        <member name="T:DSRNetSchool.Api.Configuration.AutoMapperConfiguration">
-            <summary>
-            AutoMapper configuration
-            </summary>
-        </member>
-        <member name="M:DSRNetSchool.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Add automappers
-            </summary>
-            <param name="services">Services collection</param>
-        </member>
         <member name="T:WhatToBuy.Api.Configuration.CorsConfiguration">
             <summary>
             CORS configuration
@@ -70,10 +59,127 @@
             </summary>
             <param name="services">Services collection</param>
         </member>
-        <member name="T:WhatToBuy.Api.Controllers.Item.ItemController">
+        <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.GetAll">
             <summary>
-            Item Controller
+            Get all families.
             </summary>
+            <response code="200">A list of all families.</response>
+            <response code="400">If no families avaliable</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.GetById(System.Int32)">
+            <summary>
+            Get Users own family.
+            </summary>
+            <param name="id">The id of the family to retrieve.</param>
+            <response code="200">Returns a family.</response>
+            <response code="400">If the user is not in a family</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.Update(System.Int32,WhatToBuy.Api.Controllers.Family.Models.FamilyUpdateRequestDto)">
+            <summary>
+            Change family name.
+            </summary>
+            <param name="id">The id of the family to update.</param>
+            <param name="familyDto">The updated data for the family.</param>
+            <response code="200">Returns an family.</response>
+            <response code="400">If the user is not in a family</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.GetItems">
+            <summary>
+            Gets all items.
+            </summary>
+            <param name="id">The ID of the item to get.</param>
+            <returns>The requested item.</returns>
+            <response code="200">The requested item.</response>
+            <response code="400">No items avaliable.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.GetItemById(System.Int32)">
+            <summary>
+            Gets an item by ID.
+            </summary>
+            <param name="id">The ID of the item to get.</param>
+            <returns>The requested item.</returns>
+            <response code="200">The requested item.</response>
+            <response code="404">The item with the specified ID was not found.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.CreateItem(WhatToBuy.Api.Controllers.Models.ItemAddRequestDto)">
+            <summary>
+            Creates a new item.
+            </summary>
+            <param name="itemRequestDto">The data for the new item.</param>
+            <returns>The created item.</returns>
+            <response code="200">The created item.</response>
+            <response code="400">The request data was invalid.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.UpdateItem(System.Int32,WhatToBuy.Api.Controllers.Models.ItemAddRequestDto)">
+            <summary>
+            Updates an existing item.
+            </summary>
+            <param name="id">The ID of the item to update.</param>
+            <param name="itemRequestDto">The updated data for the item.</param>
+            <returns>A response with no content.</returns>
+            <response code="200">The item was updated successfully.</response>
+            <response code="400">The request data was invalid or item with specified id not found.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.Delete(System.Int32)">
+            <summary>
+            Deletes a specific item by ID.
+            </summary>
+            <param name="id">The ID of the item to be deleted.</param>
+            <response code="200">Item was successfully deleted.</response>
+            <response code="400">Item with specified ID not found.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.GetAll">
+            <summary>
+            Retrieves all shopping lists.
+            </summary>
+            <response code="200">Returns the list of shopping lists.</response>
+            <response code="400">If no Shopping lists avaliable</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.Get(System.Int32)">
+            <summary>
+            Retrieves a specific shopping list.
+            </summary>
+            <param name="id">The ID of the shopping list to retrieve.</param>
+            <response code="200">Returns the requested shopping list.</response>
+            <response code="400">If the shopping list was not found.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.Create(WhatToBuy.Api.Controllers.Models.AddShoppingListRequestDto)">
+            <summary>
+            Creates a new shopping list.
+            </summary>
+            <param name="request">The details of the shopping list to create.</param>
+            <response code="200">Returns the newly created shopping list.</response>
+            <response code="400">If the request data is invalid.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.UpdateShoppingList(System.Int32,WhatToBuy.Api.Controllers.Models.ShoppingListUpdateRequestDto)">
+            <summary>
+            Updates a shopping list with the specified ID.
+            </summary>
+            <param name="id">The ID of the shopping list to update.</param>
+            <param name="request">The update request.</param>
+            <returns>The updated shopping list.</returns>
+            <response code="200">Returns the updated shopping list.</response>
+            <response code="400">If shopping list cannot be found or if request is invalid</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.DeleteShoppingList(System.Int32)">
+            <summary>
+            Deletes a shopping list with the specified ID.
+            </summary>
+            <param name="id">The ID of the shopping list to delete.</param>
+            <returns>No content.</returns>
+            <response code="200">The shopping list was deleted successfully.</response>
+            <response code="400">If the shopping list could not be found.</response>
+        </member>
+        <member name="T:DSRNetSchool.Api.Configuration.AutoMapperConfiguration">
+            <summary>
+            AutoMapper configuration
+            </summary>
+        </member>
+        <member name="M:DSRNetSchool.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add automappers
+            </summary>
+            <param name="services">Services collection</param>
         </member>
     </members>
 </doc>

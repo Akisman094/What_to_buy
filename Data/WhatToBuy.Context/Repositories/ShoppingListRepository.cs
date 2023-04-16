@@ -5,9 +5,9 @@ namespace WhatToBuy.Context.Repositories;
 
 public class ShoppingListRepository : IShoppingListRepository
 {
-    private readonly DbContext _dbContext;
+    private readonly MainDbContext _dbContext;
 
-    public ShoppingListRepository(DbContext dbContext)
+    public ShoppingListRepository(MainDbContext dbContext)
     {
         _dbContext = dbContext;
     }

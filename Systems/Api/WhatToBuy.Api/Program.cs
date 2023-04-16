@@ -1,8 +1,10 @@
+using DSRNetSchool.Api.Configuration;
 using WhatToBuy.Api;
 using WhatToBuy.Api.Configuration;
 using WhatToBuy.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.AddAppLogger();
 
 // Add services to the container.
@@ -14,6 +16,8 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddAppSwagger();
 services.AddAppVersioning();
+services.AddAppAutoMappers();
+services.AddAppHealthChecks();
 
 services.AddAppDbContext();
 
@@ -26,9 +30,10 @@ app.UseAppSwagger();
 app.UseAppCors();
 app.UseAuthorization();
 app.UseAppMiddlewares();
+app.UseAppHealthChecks();
 
 app.MapControllers();
 
-DbInitializer.Execute(app.Services);
+//DbInitializer.Execute(app.Services);
 
 app.Run();
