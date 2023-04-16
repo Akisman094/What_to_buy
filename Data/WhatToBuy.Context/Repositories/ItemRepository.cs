@@ -5,10 +5,10 @@ namespace WhatToBuy.Context.Repositories;
 
 public class ItemRepository : IItemRepository
 {
-    private readonly DbContext _context;
+    private readonly MainDbContext _context;
     private readonly DbSet<Item> _items;
 
-    public ItemRepository(DbContext context)
+    public ItemRepository(MainDbContext context)
     {
         _context = context;
         _items = context.Set<Item>();

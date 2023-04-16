@@ -1,5 +1,6 @@
 ﻿using WhatToBuy.Services.Items;
 using WhatToBuy.Services.ShoppingLists;
+using WhatToBuy.Services.Families;
 
 namespace WhatToBuy.Api;
 
@@ -9,7 +10,8 @@ public static class Bootstrapper
     {
         services
             .AddItemService()
-            .AddShoppingListService();
+            .AddShoppingListService()
+            .AddFamilyService();
 
         return services;
     }

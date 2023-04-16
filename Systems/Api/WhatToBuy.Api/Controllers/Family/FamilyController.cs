@@ -11,7 +11,7 @@ namespace WhatToBuy.Api.Controllers.Family;
 // TODO: Add work with claims so users can access no families, but their own
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 public class FamilyController : ControllerBase
 {
@@ -32,7 +32,7 @@ public class FamilyController : ControllerBase
     /// <response code="200">A list of all families.</response>
     /// <response code="400">If no families avaliable</response>
     [HttpGet]
-    [Authorize(Policy = "Admin")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<FamilyResponseDto>>> GetAll()
     {
@@ -42,7 +42,7 @@ public class FamilyController : ControllerBase
     }
 
     /// <summary>
-    /// Get a family by id.
+    /// Get Users own family.
     /// </summary>
     /// <param name="id">The id of the family to retrieve.</param>
     /// <response code="200">Returns a family.</response>
@@ -52,6 +52,7 @@ public class FamilyController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<FamilyResponseDto>> GetById(int id)
     {
+        // TODO: add work with claims
         var family = await _familyService.GetAsync(id);
 
         var response = _mapper.Map<FamilyResponseDto>(family);
@@ -59,25 +60,7 @@ public class FamilyController : ControllerBase
     }
 
     /// <summary>
-    /// Add a new family.
-    /// </summary>
-    /// <param name="familyDto">The data for the family to add.</param>
-    /// <response code="200">Returns the added family.</response>
-    /// <response code="400">If the user is already in a family</response>
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<FamilyResponseDto>> Create([FromBody] FamilyAddRequestDto familyDto)
-    {
-        var family = _mapper.Map<FamilyAddModel>(familyDto);
-        var responseModel = await _familyService.CreateAsync(userId, family);
-        
-        var response = _mapper.Map<FamilyResponseDto>(responseModel);
-        return Ok(response);
-    }
-
-    /// <summary>
-    /// Update a family.
+    /// Change family name.
     /// </summary>
     /// <param name="id">The id of the family to update.</param>
     /// <param name="familyDto">The updated data for the family.</param>
@@ -90,7 +73,7 @@ public class FamilyController : ControllerBase
     {
         var familyModel = _mapper.Map<FamilyUpdateModel>(familyDto);
         var responseModel = await _familyService.UpdateAsync(id, familyModel);
-        var responseDto = _mapper.Map<FamilyResponseDto>(familyModel);
+        var responseDto = _mapper.Map<FamilyResponseDto>(responseModel);
         return Ok(responseDto);
     }
 }
