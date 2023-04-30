@@ -1,5 +1,6 @@
 ﻿namespace WhatToBuy.Common.Exceptions;
 
+using Microsoft.AspNetCore.Http;
 using System;
 
 /// <summary>
@@ -10,7 +11,7 @@ public class ProcessException : Exception
     /// <summary>
     ///Error code
     /// </summary>
-    public string Code { get; }
+    public int Code { get; } = StatusCodes.Status400BadRequest;
 
     /// <summary>
     /// Error name
@@ -35,12 +36,12 @@ public class ProcessException : Exception
     {
     }
 
-    public ProcessException(string code, string message) : base(message)
+    public ProcessException(int code, string message) : base(message)
     {
         Code = code;
     }
 
-    public ProcessException(string code, string message, Exception inner) : base(message, inner)
+    public ProcessException(int code, string message, Exception inner) : base(message, inner)
     {
         Code = code;
     }
@@ -51,6 +52,12 @@ public class ProcessException : Exception
     {
         if (predicate.Invoke())
             throw new ProcessException(message);
+    }
+
+    public static void ThrowIf(Func<bool> predicate, int statusCode, string message)
+    {
+        if (predicate.Invoke())
+            throw new ProcessException(statusCode, message);
     }
 }
 

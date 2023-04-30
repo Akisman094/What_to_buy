@@ -1,4 +1,6 @@
-﻿namespace WhatToBuy.Context.Entities;
+﻿using AutoMapper;
+
+namespace WhatToBuy.Context.Entities;
 
 public class ShoppingList : BaseEntity
 {
@@ -7,7 +9,7 @@ public class ShoppingList : BaseEntity
     /// </summary>
     public string Name { get; set; }
     
-    public virtual ICollection<Item> Items { get; set; }
+    public virtual IEnumerable<Item> Items { get; set; }
 
     public int? FamilyId { get; set; }
     public virtual Family Family { get; set; }

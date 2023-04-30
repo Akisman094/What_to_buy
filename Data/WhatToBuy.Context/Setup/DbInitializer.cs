@@ -10,8 +10,7 @@ public static class DbInitializer
         using var scope = serviceProvider.GetService<IServiceScopeFactory>()?.CreateScope();
         ArgumentNullException.ThrowIfNull(scope);
 
-        var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<MainDbContext>>();
-        using var context = dbContextFactory.CreateDbContext();
-        context.Database.Migrate();
+        var dataBase = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+        dataBase.Database.Migrate();
     }
 }

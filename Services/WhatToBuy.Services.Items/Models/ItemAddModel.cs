@@ -7,6 +7,7 @@ public class ItemAddModel
 {
     public string Name { get; set; }
     public int Amount { get; set; }
+    public int ShoppingListId { get; set; }
 }
 
 public class ItemAddModelProfile : Profile

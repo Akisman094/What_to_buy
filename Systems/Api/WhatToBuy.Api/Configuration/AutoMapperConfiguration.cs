@@ -1,6 +1,6 @@
 ﻿using WhatToBuy.Common.Helpers;
 
-namespace DSRNetSchool.Api.Configuration;
+namespace WhatToBuy.Api.Configuration;
 
 /// <summary>
 /// AutoMapper configuration

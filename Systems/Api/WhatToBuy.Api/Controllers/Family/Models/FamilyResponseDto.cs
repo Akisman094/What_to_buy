@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using WhatToBuy.Services.Families;
-using WhatToBuy.Services.ShoppingLists;
 
 namespace WhatToBuy.Api.Controllers.Family.Models;
 
@@ -10,9 +9,9 @@ public class FamilyResponseDto
 
     public string Name { get; set; }
 
-    public ICollection<string> Users { get; set; }
+    public IEnumerable<string>? UserNames { get; set; }
 
-    public ICollection<string> ShoppingLists { get; set; }
+    public IEnumerable<int>? ShoppingLists { get; set; }
 }
 
 public class FamilyResponseDtoProfile : Profile

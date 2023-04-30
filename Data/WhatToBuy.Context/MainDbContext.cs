@@ -18,8 +18,17 @@ public class MainDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
         modelBuilder.Entity<User>().ToTable("users");
+        modelBuilder.Entity<User>().Property(x => x.Email).HasMaxLength(50);
+        modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
+        modelBuilder.Entity<User>().Property(x => x.NormalizedEmail).HasMaxLength(50);
+        modelBuilder.Entity<User>().HasIndex(x => x.NormalizedEmail).IsUnique();
+        modelBuilder.Entity<User>().HasIndex(x => x.UserName).IsUnique();
+        modelBuilder.Entity<User>().HasIndex(x => x.NormalizedUserName).IsUnique();
+        modelBuilder.Entity<User>().Property(x => x.Name).IsRequired().HasMaxLength(50);
+        modelBuilder.Entity<User>().HasOne(x => x.Family).WithMany(y => y.Users).HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Restrict);
+        
         modelBuilder.Entity<IdentityRole<Guid>>().ToTable("user_roles");
         modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("user_role_owners");
@@ -28,10 +37,6 @@ public class MainDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
 
         modelBuilder.Entity<Family>().ToTable("families");
-
-        modelBuilder.Entity<User>().ToTable("users");
-        modelBuilder.Entity<User>().Property(x => x.Name).IsRequired();
-        modelBuilder.Entity<User>().HasOne(x => x.Family).WithMany(y => y.Users).HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Item>().ToTable("items");
         modelBuilder.Entity<Item>().HasOne(x => x.ShoppingList).WithMany(y => y.Items).HasForeignKey(x => x.ShoppingListId).OnDelete(DeleteBehavior.ClientCascade);

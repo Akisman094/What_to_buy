@@ -12,12 +12,12 @@ public static class Bootstrapper
     /// </summary>
     public static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration = null)
     {
-        var settings = Settings.LoadAll();
+        var settings = Settings.Load<DbSettings>("Database", configuration);
         services.AddSingleton(settings);
 
         services.AddDbContext<MainDbContext>(options =>
         {
-            options.UseSqlServer(settings.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(settings.ConnectionString);
         });
 
         return services;

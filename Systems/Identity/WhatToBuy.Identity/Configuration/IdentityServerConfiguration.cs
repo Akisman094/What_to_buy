@@ -1,7 +1,8 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using WhatToBuy.Context;
 using WhatToBuy.Context.Entities;
+using Duende.IdentityServer.AspNetIdentity;
 
 namespace WhatToBuy.Identity.Configuration;
 
@@ -23,18 +24,16 @@ public static class IdentityServerConfiguration
 
         services
            .AddIdentityServer()
-
-           .AddAspNetIdentity<User>()
-
            .AddInMemoryApiScopes(AppApiScopes.ApiScopes)
            .AddInMemoryClients(AppClients.Clients)
            .AddInMemoryApiResources(AppResources.Resources)
            .AddInMemoryIdentityResources(AppIdentityResources.Resources)
-
-           .AddTestUsers(AppApiTestUsers.ApiUsers)
-
+           .AddResourceOwnerValidator<ResourceOwnerPasswordValidator<User>>()
+           .AddAspNetIdentity<User>()
+           .AddProfileService<ProfileService>()
            .AddDeveloperSigningCredential();
+
+        services.AddScoped<IProfileService, ProfileService>();
         return services;
     }
-
 }

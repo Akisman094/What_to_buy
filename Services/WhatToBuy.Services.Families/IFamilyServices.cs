@@ -1,9 +1,12 @@
-﻿namespace WhatToBuy.Services.Families;
+﻿using System.Security.Claims;
 
+namespace WhatToBuy.Services.Families;
 public interface IFamilyServices
 {
-    Task<FamilyModel> CreateAsync(int userId);
+    Task<FamilyModel> CreateAsync(string familyName);
     Task<IEnumerable<FamilyModel>> GetAllAsync();
-    Task<FamilyModel> GetAsync(int userId);
+    Task<FamilyModel> GetByIdAsync(int familyId);
+    Task<FamilyModel> GetUsersFamilyAsync(ClaimsPrincipal user);
+    Task<bool> IsAuthorized(ClaimsPrincipal user, int familyId);
     Task<FamilyModel> UpdateAsync(int id, FamilyUpdateModel familyDto);
 }

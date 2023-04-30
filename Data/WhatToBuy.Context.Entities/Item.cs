@@ -1,4 +1,6 @@
-﻿namespace WhatToBuy.Context.Entities;
+﻿using AutoMapper;
+
+namespace WhatToBuy.Context.Entities;
 
 /// <summary>
 /// Item entity, used to form a shopping list
@@ -10,4 +12,9 @@ public class Item : BaseEntity
 
     public int? ShoppingListId { get; set; }
     public virtual ShoppingList ShoppingList { get; set; }
+
+    public string ToCustomString()
+    {
+        return $"{Name} x {Amount}";
+    }
 }

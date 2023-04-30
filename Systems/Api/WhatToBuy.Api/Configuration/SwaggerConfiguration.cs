@@ -6,22 +6,26 @@ using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
+using WhatToBuy.Common.Security;
+using WhatToBuy.Services.Settings;
 
 /// <summary>
 /// Swagger configuration
 /// </summary>
 public static class SwaggerConfiguration
 {
-    private static string AppTitle = "DSRNetSchool Api";
+    private static string AppTitle = "WhatToBuy Api";
 
     /// <summary>
     /// Add OpenAPI for API
     /// </summary>
     /// <param name="services">Services collection</param>
-    ///// <param name="mainSettings"></param>
     ///// <param name="swaggerSettings"></param>
-    public static IServiceCollection AddAppSwagger(this IServiceCollection services)
+    public static IServiceCollection AddAppSwagger(this IServiceCollection services, SwaggerSettings swaggerSettings, IdentitySettings identitySettings)
     {
+        if (!swaggerSettings.Enabled)
+            return services;
+
         services
             .AddOptions<SwaggerGenOptions>()
             .Configure<IApiVersionDescriptionProvider>((options, provider) =>
@@ -59,15 +63,14 @@ public static class SwaggerConfiguration
                 In = ParameterLocation.Header,
                 Flows = new OpenApiOAuthFlows
                 {
-                    //Password = new OpenApiOAuthFlow
-                    //{
-                    //    TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
-                    //    Scopes = new Dictionary<string, string>
-                    //    {
-                    //        {AppScopes.BooksRead, "BooksRead"},
-                    //        {AppScopes.BooksWrite, "BooksWrite"}
-                    //    }
-                    //}
+                    Password = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identitySettings.Url}/connect/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+
+                        }
+                    }
                 }
             });
 
@@ -88,9 +91,10 @@ public static class SwaggerConfiguration
 
             options.UseOneOfForPolymorphism();
             options.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
-
             options.ExampleFilters();
+            
         });
+
 
         services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
@@ -104,7 +108,7 @@ public static class SwaggerConfiguration
     /// Start OpenAPI UI
     /// </summary>
     /// <param name="app">Web application</param>
-    public static void UseAppSwagger(this WebApplication app)
+    public static void UseAppSwagger(this WebApplication app, SwaggerSettings swaggerSettings)
     {
         //var swaggerSettings = app.Services.GetService<SwaggerSettings>();
 
@@ -130,8 +134,8 @@ public static class SwaggerConfiguration
                 options.DefaultModelsExpandDepth(-1);
                 options.OAuthAppName(AppTitle);
 
-                //options.OAuthClientId(swaggerSettings?.OAuthClientId ?? "");
-                //options.OAuthClientSecret(swaggerSettings?.OAuthClientSecret ?? "");
+                options.OAuthClientId(swaggerSettings?.OAuthClientId ?? "");
+                options.OAuthClientSecret(swaggerSettings?.OAuthClientSecret ?? "");
             }
         );
     }
