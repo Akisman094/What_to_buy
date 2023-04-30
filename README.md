@@ -1,17 +1,46 @@
-What to buy
-The service will store your grocery lists. To access them you will need to log in to your account, after that you will be able to access your family’s stored lists. There you can add items or remove them from grocery list. There will be feature to send a particular list to the entered email address.
 
-Main:
-	1.	Basic WEB API – 2 weeks(4 days reserved)
-		a.	Enable Logging and Versioning, add Swagger. - < 1 day
-		b.	Models for an item, grocety list, user and a family(group of people) - 1 day
-		c.	Controller and services for items(Post/Put/Get) – 2 days
-		d.	Controller and services for grocery lists(Post/Put/Get/Delete) – 2 days
-		e.	Controller and services for users(Post/Put/Get) – 2 days
-		f.	Connect to MySQL database – 2 days
-	2.	Add functionality for email sender – 1 week
+# WhatToBuy
 
-Secondary:
-	1.	Add UserManager to allow users to register, change and restore password. – 1 week
-	2.	Add JWT and IdentityServer for client identification. – 1 week
-	3.	Create client side app. – 2 weeks
+The application stores your grocery lists. To access them you will need to log in to your account, after that you will be able to access your family’s stored lists. There you can add items or remove them from grocery list. You can send shopping list to the email of choice.
+
+
+## Setup
+You can launch it using docker-compose or even without it
+### Docker
+To setup this project go to docker-compose project and find file named env.api. There you will find: 
+
+```code
+EMAILSENDER__SMTPSERVERURL=
+EMAILSENDER__SMTPPORT=
+EMAILSENDER__EMAILADDRESS=
+EMAILSENDER__EMAILPASSWORD=
+```
+There you will have to put your SmtpServer settings. I used [ethereal](https://ethereal.email/) for these purposes.  
+Once that is done, you are good to go.
+
+### Launching without Docker
+If you are willing to use the application without docker, then head to Systems -> Api -> WhatToBuy.Api -> appsettings.json. There correct already familiar lines:
+```code
+"EmailSender": {
+    "SmtpServerUrl": "",
+    "SmtpPort": "",
+    "EmailAddress": "",
+    "EmailPassword": ""
+  }
+```
+After that you will have to insert you own MsSql connection string instead of what you see here:  
+```code
+"Database": {
+    "ConnectionString": "Server=localhost;Database=WhatToBuy;User Id=sa;Password=SomePassw0rd;Trusted_Connection=True;Encrypt=false;Integrated security=false;"
+  },
+```  
+Then copy this section and head to Systems -> Identity -> WhatToBuy.Identity -> appsettings.json and replace the same section with what you just copied.  
+To access Api you need IdentityServer to issue you a JWT Token. To launch them both simultaneously right-click on the Solution and go to properties. There in "Startup Project" set "Multipple Startup Proojects" and put actions infront of WhatToBuy.Api and WhatToBuy.Identity to Start.  
+After that you are free to launch the project
+
+## Accessing Admin
+Application automatically seeds Admin user into database. Here are admin credentials:
+```code
+UserName: "Admin"
+Password: "CoolAdmin"
+```
