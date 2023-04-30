@@ -5,7 +5,7 @@ namespace WhatToBuy.Services.ShoppingLists;
 
 public class ShoppingListUpdateModel
 { 
-    public int Name { get; set; }
+    public string Name { get; set; }
 }
 
 public class ShoppingListUpdateModelProfile : Profile

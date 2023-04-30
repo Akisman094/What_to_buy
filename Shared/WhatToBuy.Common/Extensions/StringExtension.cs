@@ -1,6 +1,7 @@
 ﻿namespace WhatToBuy.Common;
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -52,5 +53,14 @@ public static class StringExtension
     {
         str = str.Trim();
         return Regex.Replace(str, @"\s+", " ");
+    }
+
+    public static bool IsValidEmail(this string mail)
+    {
+        if(mail == null) 
+            return false;
+        if(new EmailAddressAttribute().IsValid(mail)) 
+            return true;
+        return false;
     }
 }

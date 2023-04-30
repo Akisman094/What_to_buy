@@ -14,12 +14,16 @@ public class ShoppingListRepository : IShoppingListRepository
 
     public async Task<IEnumerable<ShoppingList>> GetAllAsync()
     {
-        return await _dbContext.Set<ShoppingList>().ToListAsync();
+        var shoppingLists = await _dbContext.Set<ShoppingList>().Include(x => x.Family).Include(x => x.Items).ToListAsync();
+        return shoppingLists;
     }
 
     public async Task<ShoppingList> GetByIdAsync(int id)
     {
-        return await _dbContext.Set<ShoppingList>().FindAsync(id);
+        var shoppingLists = _dbContext.Set<ShoppingList>().Include(x => x.Family).Include(x => x.Items);
+        var shoppingListQuery = from s in shoppingLists where s.Id == id select s;
+        var shoppingList = await shoppingListQuery.FirstOrDefaultAsync();
+        return shoppingList;
     }
 
     public async Task AddAsync(ShoppingList shoppingList)

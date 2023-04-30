@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using FluentValidation;
+using System.Text.Json;
 using WhatToBuy.Common.Exceptions;
 using WhatToBuy.Common.Extensions;
 using WhatToBuy.Common.Responses;
@@ -25,6 +26,10 @@ public class ExceptionsMiddleware
         {
             response = pe.ToErrorResponse();
         }
+        catch (ValidationException ve)
+        {
+            response = ve.ToErrorResponse();
+        }
         catch (Exception pe)
         {
             response = pe.ToErrorResponse();
@@ -33,7 +38,7 @@ public class ExceptionsMiddleware
         {
             if (response is not null)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = response.ErrorCode;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response));
                 await context.Response.StartAsync();

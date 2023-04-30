@@ -6,18 +6,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>api.xml</DocumentationFile>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.5.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
     <PackageReference Include="Serilog.Expressions" Version="3.4.1" />
@@ -30,10 +36,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Data\WhatToBuy.Context.Entities\WhatToBuy.Context.Entities.csproj" />
     <ProjectReference Include="..\..\..\Data\WhatToBuy.Context\WhatToBuy.Context.csproj" />
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.EmailService\WhatToBuy.EmailService.csproj" />
     <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Families\WhatToBuy.Services.Families.csproj" />
     <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Items\WhatToBuy.Services.Items.csproj" />
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Settings\WhatToBuy.Services.Settings.csproj" />
     <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.ShoppingList\WhatToBuy.Services.ShoppingLists.csproj" />
-    <ProjectReference Include="..\..\..\Shared\WhatToBuy.Common\WhatToBuy.Common.csproj" />
+    <ProjectReference Include="..\..\..\Services\WhatToBuy.Services.Users\WhatToBuy.Services.Users.csproj" />
   </ItemGroup>
 
   <ItemGroup>

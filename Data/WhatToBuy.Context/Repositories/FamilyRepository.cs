@@ -18,12 +18,15 @@ public class FamilyRepository : IFamilyRepository
 
     public async Task<IEnumerable<Family>> GetAllAsync()
     {
-        return await _families.ToListAsync();
+        return await _families.Include(x => x.ShoppingLists).Include(x => x.Users).ToListAsync();
     }
 
     public async Task<Family> GetByIdAsync(int id)
     {
-        return await _families.FindAsync(id);
+        var families = _context.Set<Family>().Include(x => x.ShoppingLists).Include(x => x.Users);
+        var familiesQuery = from s in families where s.Id == id select s;
+        var family = await familiesQuery.FirstOrDefaultAsync();
+        return family;
     }
 
     public async Task AddAsync(Family entity)

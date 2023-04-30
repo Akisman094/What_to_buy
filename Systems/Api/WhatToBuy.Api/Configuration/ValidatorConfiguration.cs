@@ -1,12 +1,12 @@
 ﻿namespace WhatToBuy.Api.Configuration;
 
 using WhatToBuy.Common;
-using WhatToBuy.Common.Helpers;
 using WhatToBuy.Common.Responses;
 using WhatToBuy.Common.Validator;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using WhatToBuy.Common.Helpers;
 
 public static class ValidatorConfiguration
 {
@@ -42,6 +42,8 @@ public static class ValidatorConfiguration
         {
             fv.DisableDataAnnotationsValidation = true;
         });
+
+        ValidatorsRegisterHelper.Register(builder.Services);
 
         builder.Services.AddSingleton(typeof(IModelValidator<>), typeof(ModelValidator<>));
 

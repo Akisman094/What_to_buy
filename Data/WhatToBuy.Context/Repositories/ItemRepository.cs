@@ -16,12 +16,23 @@ public class ItemRepository : IItemRepository
 
     public async Task<Item> GetByIdAsync(int id)
     {
-        return await _items.FindAsync(id);
+        var items = _context.Set<Item>().Include(x => x.ShoppingList);
+        var itemsQuery = from s in items where s.Id == id select s;
+        var item = await itemsQuery.FirstOrDefaultAsync();
+        return item;
+    }
+
+    public async Task<Item> GetByIdAndNavigPropsAsync(int id)
+    {
+        var items = _context.Set<Item>().Include(x => x.ShoppingList).ThenInclude(x => x.Family);
+        var itemsQuery = from s in items where s.Id == id select s;
+        var item = await itemsQuery.FirstOrDefaultAsync();
+        return item;
     }
 
     public async Task<IEnumerable<Item>> GetAllAsync()
     {
-        return await _items.ToListAsync();
+        return await _items.Include(x => x.ShoppingList).ToListAsync();
     }
 
     public async Task AddAsync(Item item)

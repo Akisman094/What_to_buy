@@ -22,6 +22,6 @@ public class AddShoppingListRequestDtoProfile : Profile
 {
     public AddShoppingListRequestDtoProfile()
     {
-        CreateMap<AddShoppingListModel, AddShoppingListRequestDto>();
+        CreateMap<AddShoppingListRequestDto, AddShoppingListModel>();
     }
 }

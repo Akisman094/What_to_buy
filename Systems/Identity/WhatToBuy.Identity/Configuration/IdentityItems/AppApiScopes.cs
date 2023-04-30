@@ -8,6 +8,6 @@ public static class AppApiScopes
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ApiScope(AppScopes.Admin, "Admin priviledges"),
+            new ApiScope(AppScopes.Api, "My Api")
         };
 }

@@ -2,5 +2,5 @@
 
 public static class AppScopes
 {
-    public const string Admin = "admin";
+    public const string Api = "api";
 }

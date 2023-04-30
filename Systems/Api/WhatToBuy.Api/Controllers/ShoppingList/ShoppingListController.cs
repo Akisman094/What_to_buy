@@ -1,28 +1,39 @@
 ﻿namespace WhatToBuy.Api.Controllers.ShoppingList;
 
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WhatToBuy.Api.Controllers.Models;
+using WhatToBuy.Api.Controllers.ShoppingList.Models;
 using WhatToBuy.Common.Exceptions;
 using WhatToBuy.Common.Responses;
+using WhatToBuy.Common.Security;
+using WhatToBuy.Common.Validator;
+using WhatToBuy.EmailService;
 using WhatToBuy.Services.ShoppingLists;
 
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/shoppinglists")]
 [Produces("application/json")]
+[Authorize(Policy = AppScopes.Api)]
 public class ShoppingListsController : ControllerBase
 {
     private readonly ILogger<ShoppingListsController> _logger;
     private readonly IMapper _mapper;
-    private readonly ShoppingListService _shoppingListService;
+    private readonly IShoppingListService _shoppingListService;
+    private readonly IModelValidator<SendToEmailRequestDto> _sendToEmailModelValidator;
+    private readonly IEmailSenderService _emailSenderService;
 
-    public ShoppingListsController(ILogger<ShoppingListsController> logger, IMapper mapper, ShoppingListService shoppingListService)
+    public ShoppingListsController(ILogger<ShoppingListsController> logger, IMapper mapper, IShoppingListService shoppingListService, 
+        IModelValidator<SendToEmailRequestDto> sendToEmailModelValidator, IEmailSenderService emailSenderService)
     {
         _logger = logger;
         _mapper = mapper;
         _shoppingListService = shoppingListService;
+        _sendToEmailModelValidator = sendToEmailModelValidator;
+        _emailSenderService = emailSenderService;
     }
 
     /// <summary>
@@ -31,13 +42,14 @@ public class ShoppingListsController : ControllerBase
     /// <response code="200">Returns the list of shopping lists.</response>
     /// <response code="400">If no Shopping lists avaliable</response>
     [HttpGet]
+    [Authorize(Policy = UserRoles.Admin)]
     [ProducesResponseType(typeof(IEnumerable<ShoppingListResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
     public async Task<IActionResult> GetAll()
     {
         var shoppingLists = await _shoppingListService.GetAllAsync();
 
-        var responseDto = _mapper.Map<List<ShoppingListResponseDto>>(shoppingLists);
+        var responseDto = _mapper.Map<IEnumerable<ShoppingListModel>, IEnumerable<ShoppingListResponseDto>>(shoppingLists);
 
         return Ok(responseDto);
     }
@@ -48,14 +60,18 @@ public class ShoppingListsController : ControllerBase
     /// <param name="id">The ID of the shopping list to retrieve.</param>
     /// <response code="200">Returns the requested shopping list.</response>
     /// <response code="400">If the shopping list was not found.</response>
-    [HttpGet("{id:int}", Name = nameof(Get))]
+    /// <response code="401">If user is accessing shopping list that is not his familie's</response>
+    [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ShoppingListResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorResponse))]
     public async Task<IActionResult> Get(int id)
     {
-        var shoppingList = await _shoppingListService.GetByIdAsync(id);
+        await _shoppingListService.IsAuthorized(User, id);
 
-        return Ok(_mapper.Map<ShoppingListResponseDto>(shoppingList));
+        var shoppingList = await _shoppingListService.GetByIdAsync(id);
+        var responseDto = _mapper.Map<ShoppingListResponseDto>(shoppingList);
+        return Ok(responseDto);
     }
 
     /// <summary>
@@ -70,7 +86,7 @@ public class ShoppingListsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] AddShoppingListRequestDto request)
     {
         var shoppingList = _mapper.Map<AddShoppingListModel>(request);
-        var createdShoppingList = await _shoppingListService.CreateAsync(shoppingList);
+        var createdShoppingList = await _shoppingListService.CreateAsync(User, shoppingList);
 
         var responseDto = _mapper.Map<ShoppingListResponseDto>(createdShoppingList);
 
@@ -90,6 +106,8 @@ public class ShoppingListsController : ControllerBase
     [ProducesResponseType(typeof(ProcessException), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ShoppingListResponseDto>> UpdateShoppingList(int id, ShoppingListUpdateRequestDto request)
     {
+        await _shoppingListService.IsAuthorized(User, id);
+
         var updateModel = _mapper.Map<ShoppingListUpdateModel>(request);
         var shoppingList = await _shoppingListService.UpdateAsync(id, updateModel);
 
@@ -105,6 +123,7 @@ public class ShoppingListsController : ControllerBase
     /// <response code="200">The shopping list was deleted successfully.</response>
     /// <response code="400">If the shopping list could not be found.</response>
     [HttpDelete("{id}")]
+    [Authorize(Policy = UserRoles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProcessException), StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteShoppingList(int id)
@@ -112,5 +131,30 @@ public class ShoppingListsController : ControllerBase
         await _shoppingListService.DeleteAsync(id);
 
         return Ok();
+    }
+
+    /// <summary>
+    /// Sends information about shopping list to a specified email
+    /// </summary>
+    /// <param name="id">The ID of the shopping list to be sent.</param>
+    /// <returns>Returns whether the request was passed.</returns>
+    /// <response code="200">Request was passed successfully</response>
+    /// <response code="400">If the shopping list could not be found.</response>
+    /// <response code="401">If user is accessing shopping list that is not his family's</response>
+    [HttpPost("{id}/toEmail")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProcessException), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> SendToEmail(int id, SendToEmailRequestDto sendReqDto)
+    {
+        await _shoppingListService.IsAuthorized(User, id);
+
+        _sendToEmailModelValidator.Check(sendReqDto);
+        var destAddress = sendReqDto.EmailAddress;
+        var receiverName = sendReqDto.ReceiverName;
+        var body = await _shoppingListService.GetShoppingListBodyById(id, receiverName);
+
+        await _emailSenderService.SendEmailAsync(destAddress, receiverName, body);
+
+        return Ok("Request was passed successfully");
     }
 }

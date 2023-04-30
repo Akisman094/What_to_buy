@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:    
+    whattobuy_mssql:
+        image: mcr.microsoft.com/mssql/server
+    
+    whattobuy_api:
+        image: ${DOCKER_REGISTRY-}whattobuyapi
+        build:
+            context: .
+            dockerfile: Systems/Api/WhatToBuy.Api/Dockerfile
+        depends_on:
+            - whattobuy_mssql
+
+
+    whattobuy_identity:
+        image: ${DOCKER_REGISTRY-}whattobuyidentity
+        build:
+            context: .
+            dockerfile: Systems/Identity/WhatToBuy.Identity/Dockerfile
+        depends_on:
+            - whattobuy_mssql

@@ -4,6 +4,17 @@
         <name>WhatToBuy.Api</name>
     </assembly>
     <members>
+        <member name="T:WhatToBuy.Api.Configuration.AutoMapperConfiguration">
+            <summary>
+            AutoMapper configuration
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add automappers
+            </summary>
+            <param name="services">Services collection</param>
+        </member>
         <member name="T:WhatToBuy.Api.Configuration.CorsConfiguration">
             <summary>
             CORS configuration
@@ -36,13 +47,13 @@
             Swagger configuration
             </summary>
         </member>
-        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.AddAppSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection,WhatToBuy.Services.Settings.SwaggerSettings,WhatToBuy.Services.Settings.IdentitySettings)">
             <summary>
             Add OpenAPI for API
             </summary>
             <param name="services">Services collection</param>
         </member>
-        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication)">
+        <member name="M:WhatToBuy.Api.Configuration.SwaggerConfiguration.UseAppSwagger(Microsoft.AspNetCore.Builder.WebApplication,WhatToBuy.Services.Settings.SwaggerSettings)">
             <summary>
             Start OpenAPI UI
             </summary>
@@ -65,14 +76,15 @@
             </summary>
             <response code="200">A list of all families.</response>
             <response code="400">If no families avaliable</response>
+            <response code="401">If user is not admin</response>
         </member>
-        <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.GetById(System.Int32)">
+        <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.GetById">
             <summary>
             Get Users own family.
             </summary>
-            <param name="id">The id of the family to retrieve.</param>
             <response code="200">Returns a family.</response>
             <response code="400">If the user is not in a family</response>
+            <response code="401">User is trying to access family, while he is not in it</response>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.Family.FamilyController.Update(System.Int32,WhatToBuy.Api.Controllers.Family.Models.FamilyUpdateRequestDto)">
             <summary>
@@ -80,14 +92,14 @@
             </summary>
             <param name="id">The id of the family to update.</param>
             <param name="familyDto">The updated data for the family.</param>
-            <response code="200">Returns an family.</response>
+            <response code="200">Returns a family.</response>
             <response code="400">If the user is not in a family</response>
+            <response code="401">User is trying to modify family, while he is not in it</response>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.ItemController.GetItems">
             <summary>
             Gets all items.
             </summary>
-            <param name="id">The ID of the item to get.</param>
             <returns>The requested item.</returns>
             <response code="200">The requested item.</response>
             <response code="400">No items avaliable.</response>
@@ -100,6 +112,7 @@
             <returns>The requested item.</returns>
             <response code="200">The requested item.</response>
             <response code="404">The item with the specified ID was not found.</response>
+            <response code="401">User is trying to access item that he is not authorized to access</response>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.ItemController.CreateItem(WhatToBuy.Api.Controllers.Models.ItemAddRequestDto)">
             <summary>
@@ -109,8 +122,9 @@
             <returns>The created item.</returns>
             <response code="200">The created item.</response>
             <response code="400">The request data was invalid.</response>
+            <response code="401">User is trying to access item that he is not authorized to access</response>
         </member>
-        <member name="M:WhatToBuy.Api.Controllers.ItemController.UpdateItem(System.Int32,WhatToBuy.Api.Controllers.Models.ItemAddRequestDto)">
+        <member name="M:WhatToBuy.Api.Controllers.ItemController.UpdateItem(System.Int32,WhatToBuy.Api.Controllers.Models.ItemUpdateRequestDto)">
             <summary>
             Updates an existing item.
             </summary>
@@ -119,6 +133,7 @@
             <returns>A response with no content.</returns>
             <response code="200">The item was updated successfully.</response>
             <response code="400">The request data was invalid or item with specified id not found.</response>
+            <response code="401">User is trying to access item that he is not authorized to access</response>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.ItemController.Delete(System.Int32)">
             <summary>
@@ -127,6 +142,17 @@
             <param name="id">The ID of the item to be deleted.</param>
             <response code="200">Item was successfully deleted.</response>
             <response code="400">Item with specified ID not found.</response>
+            <response code="401">User is trying to access item that he is not authorized to access</response>
+        </member>
+        <member name="T:WhatToBuy.Api.Controllers.RedirectToSwaggerController">
+            <summary>
+            Controller to redirect from domain name to swagger
+            </summary>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.RedirectToSwaggerController.RedirectToSwaggerUi">
+            <summary>
+            Redirects from domain name to swagger
+            </summary>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.GetAll">
             <summary>
@@ -142,6 +168,7 @@
             <param name="id">The ID of the shopping list to retrieve.</param>
             <response code="200">Returns the requested shopping list.</response>
             <response code="400">If the shopping list was not found.</response>
+            <response code="401">If user is accessing shopping list that is not his familie's</response>
         </member>
         <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.Create(WhatToBuy.Api.Controllers.Models.AddShoppingListRequestDto)">
             <summary>
@@ -170,16 +197,63 @@
             <response code="200">The shopping list was deleted successfully.</response>
             <response code="400">If the shopping list could not be found.</response>
         </member>
-        <member name="T:DSRNetSchool.Api.Configuration.AutoMapperConfiguration">
+        <member name="M:WhatToBuy.Api.Controllers.ShoppingList.ShoppingListsController.SendToEmail(System.Int32,WhatToBuy.Api.Controllers.ShoppingList.Models.SendToEmailRequestDto)">
             <summary>
-            AutoMapper configuration
+            Sends information about shopping list to a specified email
+            </summary>
+            <param name="id">The ID of the shopping list to be sent.</param>
+            <returns>Returns whether the request was passed.</returns>
+            <response code="200">Request was passed successfully</response>
+            <response code="400">If the shopping list could not be found.</response>
+            <response code="401">If user is accessing shopping list that is not his family's</response>
+        </member>
+        <member name="T:WhatToBuy.Api.Controllers.User.UserController">
+            <summary>
+            Controller for user management endpoints
             </summary>
         </member>
-        <member name="M:DSRNetSchool.Api.Configuration.AutoMapperConfiguration.AddAppAutoMappers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.Register(WhatToBuy.Api.Controllers.Models.UserRegistrationRequestDto)">
             <summary>
-            Add automappers
+            Registers a new user
             </summary>
-            <param name="services">Services collection</param>
+            <param name="registrationRequest">The user registration information</param>
+            <returns>A success message if the registration was successful</returns>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.AddUserToRole(WhatToBuy.Api.Controllers.Models.UserAddToRoleDto)">
+            <summary>
+            Adds a user to a role.
+            </summary>
+            <returns>A response indicating whether the user was successfully added to the role.</returns>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.Get">
+            <summary>
+            Get details of a user.
+            </summary>
+            <response code="200">Returns a user details.</response>
+            <response code="400">Returns an error response if the request is invalid.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.GetAll">
+            <summary>
+            Get details of any user.
+            </summary>
+            <response code="200">Returns a user details.</response>
+            <response code="400">Returns an error response if the request is invalid.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.UpdateUser(WhatToBuy.Api.Controllers.Models.UserUpdateRequestDto)">
+            <summary>
+            Updates the name or family ID of a user.
+            </summary>
+            <response code="200">Returns a success message if the update was successful.</response>
+            <response code="400">Returns an error response if the request is invalid or the update failed.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.UpdateUser(System.String,WhatToBuy.Api.Controllers.Models.UserUpdateRequestDto)">
+            <summary>
+            Updates the name or family ID of any user.
+            </summary>
+            <param name="id">The ID of the user to update.</param>
+            <param name="request">The request containing the new name and/or family ID.</param>
+            <response code="200">Returns a success message if the update was successful.</response>
+            <response code="400">Returns an error response if the request is invalid or the update failed.</response>
         </member>
     </members>
 </doc>

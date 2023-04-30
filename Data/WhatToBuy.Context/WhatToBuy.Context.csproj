@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\WhatToBuy.Common\WhatToBuy.Common.csproj" />
     <ProjectReference Include="..\..\Shared\WhatToBuy.Settings\WhatToBuy.Settings.csproj" />
     <ProjectReference Include="..\WhatToBuy.Context.Entities\WhatToBuy.Context.Entities.csproj" />
   </ItemGroup>

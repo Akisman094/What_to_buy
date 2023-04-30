@@ -7,7 +7,7 @@ public class ShoppingListResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public List<ItemResponseDto> Items { get; set; }
+    public IEnumerable<string>? Items { get; set; }
 }
 
 public class ShoppingListResponseDtoProfile : Profile

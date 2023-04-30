@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  whattobuy_api:
+    ports:
+      - "10000:80"
+    networks:
+      - shared_whattobuy_net
+    env_file:
+      - env.api
+  
+  whattobuy_identity:
+    ports:
+      - "10001:80"
+    networks:
+      - shared_whattobuy_net
+    env_file:
+      - env.identity
+
+  whattobuy_mssql:
+    env_file:
+        - env.mssql
+    ports:
+      - "1433:1433"
+    networks:
+      - shared_whattobuy_net
+
+networks:
+  shared_whattobuy_net:
+    name: what_to_buy
+    driver: bridge 

@@ -9,20 +9,17 @@ public class FamilyModel
 
     public string Name { get; set; }
 
-    public ICollection<string> Users { get; set; }
+    public IEnumerable<string>? UserNames { get; set; }
 
-    public ICollection<string> ShoppingLists { get; set; }
+    public IEnumerable<int>? ShoppingLists { get; set; }
 }
 
 public class FamilyResponseDtoProfile : Profile
 {
     public FamilyResponseDtoProfile()
     {
-        CreateMap<Family, FamilyModel>()
-            .AfterMap((s, d) =>
-            {
-                d.Users = new List<string>(s.Users.Select(x => x.Name));
-                d.ShoppingLists = new List<string>(s.ShoppingLists.Select(x => x.Name));
-            });
+        CreateMap<Family, FamilyModel>().ForMember(dest => dest.UserNames, act => act.MapFrom(src => src.Users));
+        CreateMap<User, string>().ConvertUsing(x => x.UserName);
+        CreateMap<ShoppingList, int>().ConvertUsing(x => x.Id);
     }
 }

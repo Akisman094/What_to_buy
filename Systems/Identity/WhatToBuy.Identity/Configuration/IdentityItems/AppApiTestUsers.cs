@@ -11,7 +11,7 @@ public static class AppApiTestUsers
             {
                 SubjectId = "1",
                 Username = "MasterChief",
-                Password = "John117"
+                Password = "John117",
             },
             new TestUser
             {

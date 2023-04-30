@@ -14,7 +14,6 @@
     <ProjectReference Include="..\..\Data\WhatToBuy.Context.Entities\WhatToBuy.Context.Entities.csproj" />
     <ProjectReference Include="..\..\Data\WhatToBuy.Context\WhatToBuy.Context.csproj" />
     <ProjectReference Include="..\..\Shared\WhatToBuy.Common\WhatToBuy.Common.csproj" />
-    <ProjectReference Include="..\WhatToBuy.Services.Items\WhatToBuy.Services.Items.csproj" />
   </ItemGroup>
 
 </Project>
