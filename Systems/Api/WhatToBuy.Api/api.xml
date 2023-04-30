@@ -255,5 +255,22 @@
             <response code="200">Returns a success message if the update was successful.</response>
             <response code="400">Returns an error response if the request is invalid or the update failed.</response>
         </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.ResetPassword(WhatToBuy.Api.Controllers.Models.ResetPasswordRequestDto)">
+            <summary>
+            Initiates a reset password sequence.
+            </summary>
+            <param name="request">UserName of a user that wants to reset his password.</param>
+            <response code="200">Returns a success message reset email was successfully passed.</response>
+            <response code="400">Returns an error response if the user is not found.</response>
+        </member>
+        <member name="M:WhatToBuy.Api.Controllers.User.UserController.ResetPassword(System.String,System.String,WhatToBuy.Api.Controllers.Models.NewPasswordDto)">
+            <summary>
+            Reset password from the link
+            </summary>
+            <param name="userId">User Id</param>
+            <param name="token">Token</param>
+            <param name="model">New password</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

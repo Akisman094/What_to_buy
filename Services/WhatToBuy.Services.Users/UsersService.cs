@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using WhatToBuy.Common.Exceptions;
 using WhatToBuy.Common.Validator;
 using WhatToBuy.Context.Entities;
@@ -32,6 +33,16 @@ public class UsersService : IUsersService
     public async Task<UserModel> FindByUserNameAsync(string userName)
     {
         var user = await _userManager.FindByNameAsync(userName);
+        ProcessException.ThrowIf(() => user is null, StatusCodes.Status404NotFound, $"User with userName \"{userName}\" not found");
+
+        var userModel = _mapper.Map<UserModel>(user);
+        return userModel;
+    }
+
+    public async Task<UserModel> FindByIdAsync(string uid)
+    {
+        var user = await _userManager.FindByIdAsync(uid);
+        ProcessException.ThrowIf(() => user is null, StatusCodes.Status404NotFound, $"User with Id \"{uid}\" not found");
 
         var userModel = _mapper.Map<UserModel>(user);
         return userModel;
@@ -89,4 +100,35 @@ public class UsersService : IUsersService
 
         await _userManager.UpdateAsync(user);
     }
+
+    public async Task<string> GeneratePasswordResetTokenAsync(UserModel userModel)
+    {
+        var user = await _userManager.FindByNameAsync(userModel.UserName);
+
+        var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        return resetToken;
+    }
+
+    public async Task<string> GeneratePasswordResetEmailBodyAsync(string callbackUrl, string name)
+    {
+        var body = new StringBuilder();
+        body.AppendLine("<p>");
+        body.AppendLine($"Dear Mr(s).{name}");
+        body.AppendLine("<br>");
+        body.AppendLine($"Please, click <a href={callbackUrl}>here</a> to reset your password");
+        body.AppendLine("</p>");
+        return body.ToString();
+    }
+
+    public async Task ResetPasswordAsync(UserModel userModel, string resetToken, string newPassword)
+    {
+        var user = await _userManager.FindByNameAsync(userModel.UserName);
+
+        var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+        if(!result.Succeeded)
+        {
+            throw new ProcessException(StatusCodes.Status400BadRequest, $"Something went wrong!{Environment.NewLine}{result.Errors}");
+        }
+    }
+    
 }

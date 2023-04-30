@@ -114,7 +114,7 @@ public class ItemController : ControllerBase
         var updateModel = _mapper.Map<ItemUpdateModel>(itemRequestDto);
         await _itemService.UpdateItemAsync(id, updateModel);
 
-        return Ok();
+        return Ok($"Item with id:{id} was updated successfully");
     }
 
     /// <summary>
@@ -133,6 +133,6 @@ public class ItemController : ControllerBase
 
         await _itemService.DeleteItemAsync(id);
 
-        return Ok();
+        return Ok($"Item with id:{id} was deleted successfully");
     }
 }

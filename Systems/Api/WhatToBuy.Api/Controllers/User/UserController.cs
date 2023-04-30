@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WhatToBuy.Api.Controllers.Models;
 using WhatToBuy.Api.Controllers.ShoppingList;
 using WhatToBuy.Common.Responses;
 using WhatToBuy.Common.Security;
+using WhatToBuy.EmailService;
 using WhatToBuy.Services.Users;
 
 namespace WhatToBuy.Api.Controllers.User;
@@ -23,12 +25,14 @@ public class UserController : ControllerBase
     private readonly ILogger<ShoppingListsController> _logger;
     private readonly IMapper _mapper;
     private readonly IUsersService _userService;
+    private readonly IEmailSenderService _emailSenderService;
 
-    public UserController(ILogger<ShoppingListsController> logger, IMapper mapper, IUsersService shoppingListService)
+    public UserController(ILogger<ShoppingListsController> logger, IMapper mapper, IUsersService shoppingListService, IEmailSenderService emailSenderService)
     {
         _logger = logger;
         _mapper = mapper;
         _userService = shoppingListService;
+        _emailSenderService = emailSenderService;
     }
 
     /// <summary>
@@ -138,4 +142,71 @@ public class UserController : ControllerBase
 
         return Ok("User updated successfully.");
     }
+
+    /// <summary>
+    /// Initiates a reset password sequence.
+    /// </summary>
+    /// <param name="request">UserName of a user that wants to reset his password.</param>
+    /// <response code="200">Returns a success message reset email was successfully passed.</response>
+    /// <response code="400">Returns an error response if the user is not found.</response>
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto request)
+    {
+        // Find user by username address
+        var user = await _userService.FindByUserNameAsync(request.UserName);
+
+        // Generate password reset token
+        var token = await _userService.GeneratePasswordResetTokenAsync(user);
+
+        // Generate body and callbackUrl
+        var callbackUrl = Url.Action("ResetPassword", "User", new { userId = user.Id, token }, Request.Scheme);
+        var body = await _userService.GeneratePasswordResetEmailBodyAsync(callbackUrl, user.Name);
+
+        //Generate EmailModel
+        var email = new EmailModel
+        {
+            DestinationAddress = user.Email,
+            ReceiverName = user.Name,
+            Subject = "Password reset",
+            Body = body,
+            BodyType = EmailBodyTypes.Html
+        };
+
+        //Send email
+        await _emailSenderService.SendEmailAsync(email);
+
+        return Ok("Email sent successfully");
+    }
+
+    /// <summary>
+    /// Reset password from the link
+    /// </summary>
+    /// <param name="userId">User Id</param>
+    /// <param name="token">Token</param>
+    /// <param name="model">New password</param>
+    /// <returns></returns>
+    [HttpPost("reset-password/{userId}/{token}")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword(string userId, string token, [FromBody] NewPasswordDto model)
+    {
+        // Find user by ID
+        var userModel = await _userService.FindByIdAsync(userId);
+
+        //Decoding special symbols
+        token = System.Web.HttpUtility.UrlDecode(token);
+        
+        //fixing issue: + for some reason is decoded as space
+        token = token.Replace(' ', '+');
+
+        // Reset password
+        await _userService.ResetPasswordAsync(userModel, token, model.NewPassword);
+
+        return Ok("Password was reset successfully");
+    }
+
 }

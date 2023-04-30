@@ -6,21 +6,27 @@ namespace WhatToBuy.EmailService;
 public class EmailSenderService : IEmailSenderService
 {
     private readonly EmailSenderSettings _settings;
-    private const string subject = "Shopping List";
 
     public EmailSenderService(EmailSenderSettings settings)
     {
         _settings = settings;
     }
 
-    public async Task SendEmailAsync(string destAddress, string receiverName, string body)
+
+    /// <summary>
+    /// Method to send emails
+    /// </summary>
+    /// <param name="email">Email model</param>
+    /// <param name="type">Either "plain" or "html"</param>
+    /// <returns></returns>
+    public async Task SendEmailAsync(EmailModel email)
     {
         // create message
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("WhatToBuy", _settings.EmailAddress));
-        message.To.Add(new MailboxAddress(receiverName, destAddress));
-        message.Subject = subject;
-        message.Body = new TextPart("plain") { Text = body };
+        message.To.Add(new MailboxAddress(email.ReceiverName, email.DestinationAddress));
+        message.Subject = email.Subject;
+        message.Body = new TextPart(email.BodyType) { Text = email.Body };
 
         // configure client
         using var client = new SmtpClient();

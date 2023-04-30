@@ -3,7 +3,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using WhatToBuy.Api.Controllers.Models;
 using WhatToBuy.Api.Controllers.ShoppingList.Models;
 using WhatToBuy.Common.Exceptions;
@@ -130,7 +129,7 @@ public class ShoppingListsController : ControllerBase
     {
         await _shoppingListService.DeleteAsync(id);
 
-        return Ok();
+        return Ok($"Shopping list with id:{id} was deleted");
     }
 
     /// <summary>
@@ -152,8 +151,17 @@ public class ShoppingListsController : ControllerBase
         var destAddress = sendReqDto.EmailAddress;
         var receiverName = sendReqDto.ReceiverName;
         var body = await _shoppingListService.GetShoppingListBodyById(id, receiverName);
+        
+        var email = new EmailModel
+        {
+            DestinationAddress = destAddress,
+            ReceiverName = receiverName,
+            Subject = $"Shopping List from WhatToBuy",
+            Body = body,
+            BodyType = EmailBodyTypes.Html
+        };
 
-        await _emailSenderService.SendEmailAsync(destAddress, receiverName, body);
+        await _emailSenderService.SendEmailAsync(email);
 
         return Ok("Request was passed successfully");
     }

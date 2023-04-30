@@ -74,13 +74,16 @@ public class ShoppingListService : IShoppingListService
         ProcessException.ThrowIf(() => shoppingList is null, StatusCodes.Status404NotFound, $"Shopping list with id {id} not found.");
 
         var body = new StringBuilder();
-        body.AppendLine($"Dear Mr(s). {receiverName},{Environment.NewLine}");
-        body.AppendLine($"Please, review the list of products that need to be bought from the \"{shoppingList.Name}\" shopping list.{Environment.NewLine}All items are listed below:");
+        body.AppendLine($"<p>Dear Mr(s). {receiverName},<br>");
+        body.AppendLine($"Please, review the list of products that need to be bought from the \"{shoppingList.Name}\" shopping list.<br>All items are listed below:");
+        body.AppendLine("<ul style=\"list-style-type: square;\">");
         foreach(var item in shoppingList.Items)
         {
-            body.AppendLine($"\t{item.ToCustomString()}");
+            body.AppendLine($"<li>{item.ToCustomString()}</li>");
         }
-        
+        body.AppendLine("</ul>");
+        body.AppendLine("</p>");
+
         return body.ToString();
     }
 
