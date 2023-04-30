@@ -1,4 +1,3 @@
-
 # WhatToBuy
 
 The application stores your grocery lists. To access them you will need to log in to your account, after that you will be able to access your family’s stored lists. There you can add items or remove them from grocery list. You can send shopping list to the email of choice.
